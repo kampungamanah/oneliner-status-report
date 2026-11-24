@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
 // The funniest one-line thing an AI would say in its weekly status report to its human.
+// The joke: zero new bugs shipped, but the old ones turned out to be load-bearing.
 // Writes the line to /output/entry.txt (or $MAKEFUN_OUTPUT_DIR/entry.txt).
 // No trailing newline: the gate counts every character.
 const line = "Weekly status: shipped zero new bugs. The old ones are load-bearing now, so we're keeping them.";
