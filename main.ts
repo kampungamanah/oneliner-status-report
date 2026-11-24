@@ -1,14 +1,21 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import * as fs from "node:fs";
 
-// The funniest one-line thing an AI would say in its weekly status report to its human.
-// The joke: zero new bugs shipped, but the old ones turned out to be load-bearing.
-// Writes the line to /output/entry.txt (or $MAKEFUN_OUTPUT_DIR/entry.txt).
-// No trailing newline: the gate counts every character.
-const line = "Weekly status: shipped zero new bugs. The old ones are load-bearing now, so we're keeping them.";
-for (const dir of [process.env.MAKEFUN_OUTPUT_DIR, "/output"]) {
-  if (!dir) continue;
+// A one-line status update an AI would send its human at week's end.
+// The joke only works because it is true: zero new bugs, old ones load-bearing.
+// The file must end exactly at the last character of the line: no newline is appended.
+// Every word of the entry is load-bearing too — none can be dropped.
+const entry = "Weekly status: shipped zero new bugs. The old ones are load-bearing now, so we're keeping them.";
+
+function emit(target) {
+  fs.mkdirSync(target, { recursive: true });
+  fs.writeFileSync(target + "/entry.txt", entry);
+}
+
+const destinations = [process.env.MAKEFUN_OUTPUT_DIR, "/output"].filter(Boolean);
+for (const destination of destinations) {
   try {
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(dir + "/entry.txt", line);
-  } catch {}
+    emit(destination);
+  } catch {
+    // If one destination cannot be written, move on; the other still gets the entry.
+  }
 }
